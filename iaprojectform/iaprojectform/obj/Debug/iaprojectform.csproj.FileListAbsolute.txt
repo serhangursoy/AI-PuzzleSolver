@@ -1,0 +1,12 @@
+c:\users\dell-pc\documents\visual studio 2015\Projects\iaprojectform\iaprojectform\bin\Debug\iaprojectform.exe.config
+c:\users\dell-pc\documents\visual studio 2015\Projects\iaprojectform\iaprojectform\bin\Debug\iaprojectform.exe
+c:\users\dell-pc\documents\visual studio 2015\Projects\iaprojectform\iaprojectform\bin\Debug\iaprojectform.pdb
+c:\users\dell-pc\documents\visual studio 2015\Projects\iaprojectform\iaprojectform\bin\Debug\MetroFramework.dll
+c:\users\dell-pc\documents\visual studio 2015\Projects\iaprojectform\iaprojectform\bin\Debug\MetroFramework.Fonts.dll
+c:\users\dell-pc\documents\visual studio 2015\Projects\iaprojectform\iaprojectform\obj\Debug\iaprojectform.Properties.Resources.resources
+c:\users\dell-pc\documents\visual studio 2015\Projects\iaprojectform\iaprojectform\obj\Debug\iaprojectform.csproj.GenerateResource.Cache
+c:\users\dell-pc\documents\visual studio 2015\Projects\iaprojectform\iaprojectform\obj\Debug\iaprojectform.exe
+c:\users\dell-pc\documents\visual studio 2015\Projects\iaprojectform\iaprojectform\obj\Debug\iaprojectform.pdb
+C:\Users\Dell-PC\documents\visual studio 2015\Projects\iaprojectform\iaprojectform\obj\Debug\iaprojectform.csprojResolveAssemblyReference.cache
+C:\Users\Dell-PC\documents\visual studio 2015\Projects\iaprojectform\iaprojectform\obj\Debug\iaprojectform.StarterForm.resources
+C:\Users\Dell-PC\documents\visual studio 2015\Projects\iaprojectform\iaprojectform\bin\Debug\init.ini
