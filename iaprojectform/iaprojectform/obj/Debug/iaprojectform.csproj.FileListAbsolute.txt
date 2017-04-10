@@ -10,3 +10,6 @@ c:\users\dell-pc\documents\visual studio 2015\Projects\iaprojectform\iaprojectfo
 C:\Users\Dell-PC\documents\visual studio 2015\Projects\iaprojectform\iaprojectform\obj\Debug\iaprojectform.csprojResolveAssemblyReference.cache
 C:\Users\Dell-PC\documents\visual studio 2015\Projects\iaprojectform\iaprojectform\obj\Debug\iaprojectform.StarterForm.resources
 C:\Users\Dell-PC\documents\visual studio 2015\Projects\iaprojectform\iaprojectform\bin\Debug\init.ini
+C:\Users\Dell-PC\documents\visual studio 2015\Projects\iaprojectform\iaprojectform\bin\Debug\HtmlAgilityPack.dll
+C:\Users\Dell-PC\documents\visual studio 2015\Projects\iaprojectform\iaprojectform\bin\Debug\HtmlAgilityPack.pdb
+C:\Users\Dell-PC\documents\visual studio 2015\Projects\iaprojectform\iaprojectform\bin\Debug\HtmlAgilityPack.xml

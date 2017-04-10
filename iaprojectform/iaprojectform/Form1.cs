@@ -5,7 +5,12 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.IO;
+using System.Net;
+using HtmlAgilityPack;
 using System.Windows.Forms;
+using System.Linq;
+using System.Text;
+using System.Net.Http;
 
 namespace iaprojectform
 {
@@ -25,7 +30,7 @@ namespace iaprojectform
         public StarterForm()
         {
             InitializeComponent();
-
+            Parser();
             questionBox.Text += "\r\n";
             questionBox2.Text += "\r\n";
 
@@ -42,6 +47,89 @@ namespace iaprojectform
             questionBox2.ForeColor = Color.White;
             questionBox.BackColor = C_Sq_Avail;
             questionBox2.BackColor = C_Sq_Avail;
+        }
+
+
+        private void Parser()
+        {
+            string url = "http://www.nytimes.com/crosswords/game/mini";
+            string HTML_FILE = "";
+            using (HttpClient client = new HttpClient())
+            {
+                using (HttpResponseMessage response = client.GetAsync(url).Result)
+                {
+                    using (HttpContent content = response.Content)
+                    {
+                        string result = content.ReadAsStringAsync().Result;
+                        HTML_FILE += result;
+                    }
+                }
+            }
+
+
+            HtmlAgilityPack.HtmlDocument document2 = new HtmlAgilityPack.HtmlDocument();
+            document2.LoadHtml(HTML_FILE);
+
+            HtmlNode[] rows = document2.DocumentNode.SelectNodes("//div[@class='flex-table animated']//div[@class='flex-row']").ToArray();
+            string FINAL_INIT = "";
+            int ROW_COUNT = rows.Length;
+            int[,] SQUARES = new int[ROW_COUNT,ROW_COUNT];
+            int[] SQUARE_CELL_COUNT = new int[ROW_COUNT];
+            FINAL_INIT = ROW_COUNT + "\n#\n";
+
+            for ( int k = 0;  k < rows.Length; k++) {
+                HtmlNode row = rows[k];
+                HtmlNode[] squares = row.ChildNodes.ToArray();
+                int sqrCount = 0;
+                for (int i = 1; i < squares.Length-1; i++) {
+                  //  Console.Write(squares[i].GetAttributeValue("class","")+ ",");
+                    if (squares[i].GetAttributeValue("class", "").Equals("flex-cell ")){
+                        SQUARES[k,i-1] = 1;
+                        FINAL_INIT = FINAL_INIT + 1 + " ";
+                        sqrCount++;
+                    }else if (squares[i].GetAttributeValue("class", "").Equals("flex-cell black")) {
+                        SQUARES[k, i-1] = 0;
+                        FINAL_INIT = FINAL_INIT + 0 + " ";
+                    }
+                }
+
+
+                if (squares[squares.Length - 1].GetAttributeValue("class", "").Equals("flex-cell "))
+                {
+                    SQUARES[k, squares.Length - 2] = 1;
+                    FINAL_INIT = FINAL_INIT + 1 + "\n";
+                    sqrCount++;
+                }
+                else if (squares[squares.Length - 1].GetAttributeValue("class", "").Equals("flex-cell black"))
+                {
+                    SQUARES[k, squares.Length - 2] = 0;
+                    FINAL_INIT = FINAL_INIT + 0 + "\n";
+                }
+
+                SQUARE_CELL_COUNT[k] = sqrCount;
+            }
+
+            FINAL_INIT = FINAL_INIT  + "#\n";
+
+            HtmlNode[] clues = document2.DocumentNode.SelectNodes("//ol[@class='clue-list']//li").ToArray();
+
+            for(int o = 0; o < clues.Length; o++) {
+                FINAL_INIT = FINAL_INIT + clues[o].InnerHtml + "|";
+                for (int f = 0; f < SQUARE_CELL_COUNT[o%ROW_COUNT]-1; f++) FINAL_INIT += "A ";
+                FINAL_INIT += "A\n";
+                if (o+1 == ROW_COUNT)
+                {
+                    FINAL_INIT += "#\n";
+                }
+            }
+
+            FINAL_INIT = FINAL_INIT.Substring(0, FINAL_INIT.Length - 1);
+           // Console.WriteLine(FINAL_INIT);
+
+            System.IO.StreamWriter file = new System.IO.StreamWriter("init.ini");
+            file.WriteLine(FINAL_INIT);
+
+            file.Close();
         }
 
 
