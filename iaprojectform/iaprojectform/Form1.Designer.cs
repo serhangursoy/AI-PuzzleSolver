@@ -51,10 +51,10 @@
             this.questionBox.ForeColor = System.Drawing.Color.OldLace;
             this.questionBox.Location = new System.Drawing.Point(476, 60);
             this.questionBox.Name = "questionBox";
-            this.questionBox.Size = new System.Drawing.Size(116, 25);
+            this.questionBox.Size = new System.Drawing.Size(67, 25);
             this.questionBox.Style = MetroFramework.MetroColorStyle.Green;
             this.questionBox.TabIndex = 0;
-            this.questionBox.Text = "Left to Right;";
+            this.questionBox.Text = "Across;";
             // 
             // questionBox2
             // 
@@ -66,10 +66,10 @@
             this.questionBox2.ForeColor = System.Drawing.Color.OldLace;
             this.questionBox2.Location = new System.Drawing.Point(476, 357);
             this.questionBox2.Name = "questionBox2";
-            this.questionBox2.Size = new System.Drawing.Size(133, 25);
+            this.questionBox2.Size = new System.Drawing.Size(63, 25);
             this.questionBox2.Style = MetroFramework.MetroColorStyle.Green;
             this.questionBox2.TabIndex = 1;
-            this.questionBox2.Text = "Top to bottom;";
+            this.questionBox2.Text = "Down;";
             // 
             // StarterForm
             // 

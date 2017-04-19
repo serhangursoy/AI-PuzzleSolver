@@ -81,6 +81,8 @@ namespace iaprojectform
                 HtmlNode row = rows[k];
                 HtmlNode[] squares = row.ChildNodes.ToArray();
                 int sqrCount = 0;
+
+                
                 for (int i = 1; i < squares.Length-1; i++) {
                   //  Console.Write(squares[i].GetAttributeValue("class","")+ ",");
                     if (squares[i].GetAttributeValue("class", "").Equals("flex-cell ")){
@@ -114,7 +116,7 @@ namespace iaprojectform
             HtmlNode[] clues = document2.DocumentNode.SelectNodes("//ol[@class='clue-list']//li").ToArray();
 
             for(int o = 0; o < clues.Length; o++) {
-                FINAL_INIT = FINAL_INIT + clues[o].InnerHtml + "|";
+                FINAL_INIT = FINAL_INIT + clues[o].GetAttributeValue("value","") + ": " + clues[o].InnerHtml + "|";
                 for (int f = 0; f < SQUARE_CELL_COUNT[o%ROW_COUNT]-1; f++) FINAL_INIT += "A ";
                 FINAL_INIT += "A\n";
                 if (o+1 == ROW_COUNT)
@@ -156,11 +158,12 @@ namespace iaprojectform
                     for (int j = 0; j < SQUARE_COUNT; j++){
                         ANSWERS_SQUARE[a,j] = null; } }
 
+                bool firstRow = true;
                 line = file.ReadLine();  // Skip # char.
                 for (int a = 0;  a < SQUARE_COUNT;  a++){
                     line = file.ReadLine(); // Now we have X X X X X like a string
                     string[] tokens = line.Split(' ');
-
+                    bool innerChecker = true;
                     // Lets start to create our labels.
                     for (int k = 0; k < tokens.Length; k++) {
                         Console.Write(tokens[k] + " ");
@@ -175,17 +178,34 @@ namespace iaprojectform
                            // Console.WriteLine("Row " + (sqrLine-1) + " Column " + k + " is BLACK!");
                             ANSWERS_SQUARE[sqrLine-1,k] = "*"; // Set its Answer to TAB?.
                         } else {
-                            tmp.BackColor = C_Sq_Avail;
+                            tmp.BackColor = C_Sq_Avail;  //  Create available square
+
+                            if (firstRow)
+                            {
+                                tmp.Text = counter + "";
+                                counter++;
+                            }
+                            else
+                            {
+                                if (innerChecker)
+                                {
+                                    tmp.Text = counter + "";
+                                    counter++;
+                                    innerChecker = false;
+                                }
+                            }
                         }
                         SQUARES[sqrLine-1,k] = tmp;
                         this.Controls.Add(tmp);
                     }
                     Console.WriteLine();
                     sqrLine++;
+                    firstRow = false;
                 }
 
                 line = file.ReadLine();  // Skip # char.
 
+                int index_counter = 1;
                 // Now lets read our questions and our answers.
                 // First, horizontal questions.
                 sqrLine = 1;
@@ -194,7 +214,7 @@ namespace iaprojectform
                     line = file.ReadLine(); // Now we have XX|A B C
                     string[] tokens = line.Split('|');  // Now we have "XX" and "A B C"
                     // TODO Set question.
-                    questionBox.Text += sqrLine + ": "+ tokens[0] + "\r\n";
+                    questionBox.Text += tokens[0] + "\r\n";//sqrLine + ": "+ tokens[0] + "\r\n";
                     string[] squareAnswers = tokens[1].Split(' ');
                     int ansCount = 0;
                     for(int k = 0;  k < SQUARE_COUNT; k++) {
@@ -210,15 +230,15 @@ namespace iaprojectform
                 }
 
                 line = file.ReadLine();  // Skip # char.
-                // Now lets read our questions and our answers.
-                // First, horizontal questions.
+                
+                // Vertical
                 sqrLine = 1;
                 for (int a = 0; a < SQUARE_COUNT; a++)
                 {
                     line = file.ReadLine(); // Now we have XX|A B C
                     string[] tokens = line.Split('|');  // Now we have "XX" and "A B C"
                     // TODO Set question.
-                    questionBox2.Text += sqrLine + ": " + tokens[0] + "\r\n";
+                    questionBox2.Text += tokens[0] + "\r\n";//sqrLine + ": " + tokens[0] + "\r\n";
                     sqrLine++;
                 }
 
