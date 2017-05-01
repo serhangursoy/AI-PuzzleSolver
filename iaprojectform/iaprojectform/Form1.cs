@@ -16,7 +16,8 @@ namespace iaprojectform
 {
     public partial class StarterForm : MetroFramework.Forms.MetroForm
     {
-       
+        private bool fromNet = false;
+          
         private String INITIALIZER_FILE = "init.ini";
         private int LEFT_MARGIN = 20, TOP_MARGIN = 20, SIZE = 70, SQUARE_COUNT, GAP = 20;
         private MetroLabel[,] SQUARES;
@@ -30,7 +31,7 @@ namespace iaprojectform
         public StarterForm()
         {
             InitializeComponent();
-            Parser();
+            if (fromNet) ParsePuzzleFromNYT();
             questionBox.Text += "\r\n";
             questionBox2.Text += "\r\n";
 
@@ -47,10 +48,18 @@ namespace iaprojectform
             questionBox2.ForeColor = Color.White;
             questionBox.BackColor = C_Sq_Avail;
             questionBox2.BackColor = C_Sq_Avail;
+
+            Parser parserObj = new Parser();
+            parserObj.GetSynonym("assortment");
+            parserObj.GetDictionary("assortment");
+
+           Dictionary<string,int> dic =  parserObj.GetFromGoogle("One of 100 in trump's presidency");
+
+            foreach (KeyValuePair<string, int> a in dic) { Console.WriteLine("Word " + a.Key + " used {0} times", a.Value); }
         }
 
 
-        private void Parser()
+        private void ParsePuzzleFromNYT()
         {
             string url = "http://www.nytimes.com/crosswords/game/mini";
             string HTML_FILE = "";
