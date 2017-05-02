@@ -16,15 +16,16 @@ namespace iaprojectform
 {
     public partial class StarterForm : MetroFramework.Forms.MetroForm
     {
-        private bool fromNet = false;
+        private bool fromNet = true;
           
         private String INITIALIZER_FILE = "init.ini";
         private int LEFT_MARGIN = 20, TOP_MARGIN = 20, SIZE = 70, SQUARE_COUNT, GAP = 20;
         private MetroLabel[,] SQUARES;
         private String[,] ANSWERS_SQUARE;
         private int[] hor_start;  // Indicates the horizontal line's starting square. 
-
-
+        private char[,] ANSWERSFROMAI;
+        private List<string> columnQuestions, rowQuestions;
+        private char[,] squareLocations;
         private Color C_Sq_Avail = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(51)))), ((int)(((byte)(64)))));
         private Color C_Not_Avail = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(176)))), ((int)(((byte)(137)))));
 
@@ -49,13 +50,40 @@ namespace iaprojectform
             questionBox.BackColor = C_Sq_Avail;
             questionBox2.BackColor = C_Sq_Avail;
 
-            Parser parserObj = new Parser();
+            /* Parser parserObj = new Parser();
             parserObj.GetSynonym("assortment");
             parserObj.GetDictionary("assortment");
 
-           Dictionary<string,int> dic =  parserObj.GetFromGoogle("One of 100 in trump's presidency");
+            //Dictionary<string,int> dic =  parserObj.GetFromGoogle("One of 100 in trump's presidency");
 
             foreach (KeyValuePair<string, int> a in dic) { Console.WriteLine("Word " + a.Key + " used {0} times", a.Value); }
+            */
+
+            // We have our puzzle correctly.
+            // Lets test
+            Console.WriteLine("Square Locations:");
+            for (int k = 0; k < SQUARE_COUNT; k++) { for (int l = 0; l < SQUARE_COUNT; l++) { Console.Write(squareLocations[k,l] + " "); } Console.WriteLine(); };
+            Console.WriteLine("Row questions:");
+            foreach (string question in rowQuestions ) { Console.WriteLine(question); };
+            Console.WriteLine("Column questions:");
+            foreach (string question in columnQuestions) { Console.WriteLine(question); };
+
+            Solver solverObj = new Solver();
+            ANSWERSFROMAI = solverObj.Solve(squareLocations,rowQuestions,columnQuestions);
+
+            PrintToPuzzle();
+        }
+
+        private void PrintToPuzzle()
+        {
+            for (int c = 0; c < SQUARE_COUNT; c++) {
+                for (int r = 0;  r < SQUARE_COUNT; r++ ) {
+                    if (squareLocations[r, c] != '1') { //Not black..
+                        if (ANSWERSFROMAI[r,c] != '*')
+                            SQUARES[r, c].Text += "\r\n      " +  ANSWERSFROMAI[r, c];
+                    }
+                }
+            }
         }
 
 
@@ -144,24 +172,26 @@ namespace iaprojectform
         }
 
 
-        private bool PuzzleInitializer()
-        {
+        private bool PuzzleInitializer() {
             // Read the input file. Create and assign squares accordingly.
             SQUARE_COUNT = 0;
+
+            rowQuestions = new List<string>();
+            columnQuestions = new List<string>();
 
             int counter = 1;
             string line;
 
             // Read the file and display it line by line.
             StreamReader file = new StreamReader(INITIALIZER_FILE);
-            while ((line = file.ReadLine()) != null)
-            {
+            while ((line = file.ReadLine()) != null) {
                 int sqrLine = 1;
                 SQUARE_COUNT = Int32.Parse(line);
                 Console.WriteLine("We have "+SQUARE_COUNT+"x"+SQUARE_COUNT+" squares!");
                 // Create Label Array
                 SQUARES = new MetroLabel[SQUARE_COUNT,SQUARE_COUNT];
                 ANSWERS_SQUARE = new String[SQUARE_COUNT,SQUARE_COUNT];
+                squareLocations = new char[SQUARE_COUNT, SQUARE_COUNT];
 
                 for (int a = 0; a < SQUARE_COUNT; a++) {
                     for (int j = 0; j < SQUARE_COUNT; j++){
@@ -182,28 +212,28 @@ namespace iaprojectform
                         tmp.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
                         tmp.Location = new Point(k * SIZE + LEFT_MARGIN, sqrLine * SIZE + TOP_MARGIN);
                         tmp.Size = new Size(SIZE, SIZE);
+                        
                         if (Int32.Parse(tokens[k]) == 0) {  // Create a black square
                             tmp.BackColor = C_Not_Avail;
                            // Console.WriteLine("Row " + (sqrLine-1) + " Column " + k + " is BLACK!");
                             ANSWERS_SQUARE[sqrLine-1,k] = "*"; // Set its Answer to TAB?.
+                            squareLocations[sqrLine - 1, k] = '1';
                         } else {
                             tmp.BackColor = C_Sq_Avail;  //  Create available square
-
-                            if (firstRow)
-                            {
+                            squareLocations[sqrLine - 1, k] = '0';
+                            if (firstRow)  {
                                 tmp.Text = counter + "";
                                 counter++;
                             }
-                            else
-                            {
-                                if (innerChecker)
-                                {
+                            else  {
+                                if (innerChecker) {
                                     tmp.Text = counter + "";
                                     counter++;
                                     innerChecker = false;
                                 }
                             }
                         }
+
                         SQUARES[sqrLine-1,k] = tmp;
                         this.Controls.Add(tmp);
                     }
@@ -218,12 +248,12 @@ namespace iaprojectform
                 // Now lets read our questions and our answers.
                 // First, horizontal questions.
                 sqrLine = 1;
-                for (int a = 0; a < SQUARE_COUNT; a++)
-                {
+                for (int a = 0; a < SQUARE_COUNT; a++) {
                     line = file.ReadLine(); // Now we have XX|A B C
                     string[] tokens = line.Split('|');  // Now we have "XX" and "A B C"
                     // TODO Set question.
                     questionBox.Text += tokens[0] + "\r\n";//sqrLine + ": "+ tokens[0] + "\r\n";
+                    rowQuestions.Add(tokens[0].Substring(3));
                     string[] squareAnswers = tokens[1].Split(' ');
                     int ansCount = 0;
                     for(int k = 0;  k < SQUARE_COUNT; k++) {
@@ -242,12 +272,12 @@ namespace iaprojectform
                 
                 // Vertical
                 sqrLine = 1;
-                for (int a = 0; a < SQUARE_COUNT; a++)
-                {
+                for (int a = 0; a < SQUARE_COUNT; a++) {
                     line = file.ReadLine(); // Now we have XX|A B C
                     string[] tokens = line.Split('|');  // Now we have "XX" and "A B C"
                     // TODO Set question.
                     questionBox2.Text += tokens[0] + "\r\n";//sqrLine + ": " + tokens[0] + "\r\n";
+                    columnQuestions.Add(tokens[0].Substring(3));
                     sqrLine++;
                 }
 
@@ -265,19 +295,6 @@ namespace iaprojectform
 
             // Suspend the screen.
             Console.ReadLine();
-
-
-            /*
-            this.sqr11.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.sqr11.CustomBackground = true;
-            this.sqr11.FontSize = MetroFramework.MetroLabelSize.Tall;
-            this.sqr11.Location = new System.Drawing.Point(23, 117);
-            this.sqr11.Name = "metroLabel1";
-            this.sqr11.Size = new System.Drawing.Size(80, 80);
-            this.sqr11.TabIndex = 0;
-            this.sqr11.Text = "sqr11";
-            */
-
 
             return true;
         }
