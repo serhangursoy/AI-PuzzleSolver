@@ -34,16 +34,20 @@ namespace iaprojectform
             HtmlAgilityPack.HtmlDocument document2 = new HtmlAgilityPack.HtmlDocument();
             document2.LoadHtml(HTML_FILE);
 
-            HtmlNode[] rows = document2.DocumentNode.SelectNodes("//span[@class='text']").ToArray();
-
-            Console.WriteLine("***** Printing all synonyms *****");
-            foreach (HtmlNode a in rows)
+            if (document2.DocumentNode.SelectNodes("//span[@class='text']") != null)
             {
-                resultList.Add(a.InnerText);
-                Console.WriteLine("- " + a.InnerText);
-            }
+                HtmlNode[] rows = document2.DocumentNode.SelectNodes("//span[@class='text']").ToArray();
 
-            return resultList;
+                // Console.WriteLine("***** Printing all synonyms *****");
+                foreach (HtmlNode a in rows)
+                {
+                    resultList.Add(a.InnerText);
+                  //  Console.WriteLine("- " + a.InnerText);
+                }
+
+                return resultList;
+            }
+            return null;
         }
 
 
@@ -71,17 +75,22 @@ namespace iaprojectform
             HtmlAgilityPack.HtmlDocument document2 = new HtmlAgilityPack.HtmlDocument();
             document2.LoadHtml(HTML_FILE);
 
-            HtmlNode[] rows = document2.DocumentNode.SelectNodes("//div[@class='def-content']").ToArray();
-
-            Console.WriteLine("***** Printing all matches from dictionary *****");
-            foreach (HtmlNode a in rows)
+            if (document2.DocumentNode.SelectNodes("//div[@class='def-content']") != null)
             {
-                string element = a.InnerText.Trim();
-                resultList.Add(element);
-                Console.WriteLine("+ " + element);
+                HtmlNode[] rows = document2.DocumentNode.SelectNodes("//div[@class='def-content']").ToArray();
+
+                // Console.WriteLine("***** Printing all matches from dictionary *****");
+                foreach (HtmlNode a in rows)
+                {
+                    string element = a.InnerText.Trim();
+                    resultList.Add(element);
+                   //  Console.WriteLine("+ " + element);
+                }
+
+                return resultList;
             }
 
-            return resultList;
+            return null;
         }
 
 
@@ -110,67 +119,82 @@ namespace iaprojectform
             HtmlAgilityPack.HtmlDocument document2 = new HtmlAgilityPack.HtmlDocument();
             document2.LoadHtml(HTML_FILE);
 
-            HtmlNode[] descriptionText = document2.DocumentNode.SelectNodes("//span[@class='st']").ToArray();
-            HtmlNode[] headerText = document2.DocumentNode.SelectNodes("//h3[@class='r']").ToArray();
+            if (document2.DocumentNode.SelectNodes("//span[@class='st']") != null)
+            {
+                HtmlNode[] descriptionText = document2.DocumentNode.SelectNodes("//span[@class='st']").ToArray();
+                if (document2.DocumentNode.SelectNodes("//h3[@class='r']") != null)
+                {
+                    HtmlNode[] headerText = document2.DocumentNode.SelectNodes("//h3[@class='r']").ToArray();
 
-            Console.WriteLine("***** Printing all matches from Google *****");
-            foreach (HtmlNode a in descriptionText) {
-                a.RemoveChild(a.FirstChild, true);
-                string element = a.InnerText.Trim();
-                tempList.Add(element);
-                Console.WriteLine("% " + element);
-            }
-
-
-            foreach (HtmlNode b in headerText) {
-                tempList.Add(b.InnerText);
-                Console.WriteLine("# " + b.InnerText);
-            }
-
-            List<string> allWords = new List<string>();
-
-            foreach(string elementStr in tempList) {
-                string tmp = elementStr.Replace(".", "");
-                tmp = tmp.Replace(",", "");
-                tmp = tmp.Replace("?", "");
-                tmp = tmp.Replace("!", "");
-                tmp = tmp.Replace("\n", "");
-                tmp = tmp.Replace("...", "");
-                tmp = tmp.Replace("\t", "");
-                tmp = tmp.Replace("-", "");
-                tmp = tmp.Replace(":", "");
-                tmp = tmp.Replace("(", "");
-                tmp = tmp.Replace(")", "");
-                tmp = tmp.Replace("~", "");
-                tmp = tmp.Replace("=", "");
-                tmp = tmp.Replace("/", "");
-                tmp = tmp.Replace("^", "");
-                tmp = tmp.Replace("|", "");
-                tmp = tmp.Replace("<", "");
-                tmp = tmp.Replace(">", "");
-                tmp = tmp.Replace("'", "");
-                tmp = tmp.Replace("\"", "");
-                tmp = tmp.Replace("\b", "");
-                tmp = tmp.Trim();
-                string[] tokens = tmp.Split(' ');
-                foreach (string tokenStr in tokens)
-                    allWords.Add(tokenStr);
-            }
+                  //  Console.WriteLine("***** Printing all matches from Google *****");
+                    foreach (HtmlNode a in descriptionText)
+                    {
+                        a.RemoveChild(a.FirstChild, true);
+                        string element = a.InnerText.Trim();
+                        tempList.Add(element);
+                      //  Console.WriteLine("% " + element);
+                    }
 
 
-            foreach (string elementStr in allWords)  {
-                if (resultDic.ContainsKey(elementStr.ToLower())) {  // If we have that already.
-                    resultDic[elementStr.ToLower()] += 1;
-                } else {
-                    resultDic.Add(elementStr.ToLower(), 1);
+                    foreach (HtmlNode b in headerText)
+                    {
+                        tempList.Add(b.InnerText);
+                    //    Console.WriteLine("# " + b.InnerText);
+                    }
+
+                    List<string> allWords = new List<string>();
+
+                    foreach (string elementStr in tempList)
+                    {
+                        string tmp = elementStr.Replace(".", "");
+                        tmp = tmp.Replace(",", "");
+                        tmp = tmp.Replace("?", "");
+                        tmp = tmp.Replace("!", "");
+                        tmp = tmp.Replace("\n", "");
+                        tmp = tmp.Replace("...", "");
+                        tmp = tmp.Replace("\t", "");
+                        tmp = tmp.Replace("-", "");
+                        tmp = tmp.Replace(":", "");
+                        tmp = tmp.Replace("(", "");
+                        tmp = tmp.Replace(")", "");
+                        tmp = tmp.Replace("~", "");
+                        tmp = tmp.Replace("=", "");
+                        tmp = tmp.Replace("/", "");
+                        tmp = tmp.Replace("^", "");
+                        tmp = tmp.Replace("|", "");
+                        tmp = tmp.Replace("<", "");
+                        tmp = tmp.Replace(">", "");
+                        tmp = tmp.Replace("'", "");
+                        tmp = tmp.Replace("\"", "");
+                        tmp = tmp.Replace("\b", "");
+                        tmp = tmp.Trim();
+                        string[] tokens = tmp.Split(' ');
+                        foreach (string tokenStr in tokens)
+                            allWords.Add(tokenStr);
+                    }
+
+
+                    foreach (string elementStr in allWords)
+                    {
+                        if (resultDic.ContainsKey(elementStr.ToLower()))
+                        {  // If we have that already.
+                            resultDic[elementStr.ToLower()] += 1;
+                        }
+                        else
+                        {
+                            resultDic.Add(elementStr.ToLower(), 1);
+                        }
+                    }
+
+                    var items = from pair in resultDic
+                                orderby pair.Value descending
+                                select pair;
+                    resultDic = items.ToDictionary(t => t.Key, t => t.Value);
+                    return resultDic;
                 }
             }
 
-            var items = from pair in resultDic
-                        orderby pair.Value descending
-                        select pair;
-            resultDic = items.ToDictionary(t => t.Key, t => t.Value);
-            return resultDic;
+            return null;
         }
     }
 }

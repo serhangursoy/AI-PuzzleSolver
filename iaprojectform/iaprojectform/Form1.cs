@@ -50,15 +50,16 @@ namespace iaprojectform
             questionBox.BackColor = C_Sq_Avail;
             questionBox2.BackColor = C_Sq_Avail;
 
-            /* Parser parserObj = new Parser();
-            parserObj.GetSynonym("assortment");
-            parserObj.GetDictionary("assortment");
+            Parser parserObj = new Parser();
+            parserObj.GetSynonym("xa213123");
+            parserObj.GetDictionary("assort12312312312ment");
 
-            //Dictionary<string,int> dic =  parserObj.GetFromGoogle("One of 100 in trump's presidency");
+            Dictionary<string,int> dic =  parserObj.GetFromGoogle("One of 100 in trump's presidency");
 
-            foreach (KeyValuePair<string, int> a in dic) { Console.WriteLine("Word " + a.Key + " used {0} times", a.Value); }
-            */
+          //  foreach (KeyValuePair<string, int> a in dic) { Console.WriteLine("Word " + a.Key + " used {0} times", a.Value); }
+         
 
+            
             // We have our puzzle correctly.
             // Lets test
             Console.WriteLine("Square Locations:");
@@ -72,6 +73,7 @@ namespace iaprojectform
             ANSWERSFROMAI = solverObj.Solve(squareLocations,rowQuestions,columnQuestions);
 
             PrintToPuzzle();
+            
         }
 
         private void PrintToPuzzle()
