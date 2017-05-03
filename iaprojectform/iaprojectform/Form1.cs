@@ -199,12 +199,15 @@ namespace iaprojectform
                     for (int j = 0; j < SQUARE_COUNT; j++){
                         ANSWERS_SQUARE[a,j] = null; } }
 
+                bool weAllDone = false;
+                int startIndexForRow = -1;
                 bool firstRow = true;
                 line = file.ReadLine();  // Skip # char.
                 for (int a = 0;  a < SQUARE_COUNT;  a++){
                     line = file.ReadLine(); // Now we have X X X X X like a string
                     string[] tokens = line.Split(' ');
                     bool innerChecker = true;
+
                     // Lets start to create our labels.
                     for (int k = 0; k < tokens.Length; k++) {
                         Console.Write(tokens[k] + " ");
@@ -226,6 +229,39 @@ namespace iaprojectform
                             if (firstRow)  {
                                 tmp.Text = counter + "";
                                 counter++;
+                                if (counter >= 6) {
+                                    weAllDone = true;
+                                } else {
+                                    startIndexForRow = k+1;
+                                }
+                            } else  {
+                                if (innerChecker) {
+                                    tmp.Text = counter + "";
+                                    counter++;
+                                    innerChecker = false;
+                                }
+
+                                if (!weAllDone) {
+                                    if (k == startIndexForRow)
+                                    {
+                                        tmp.Text = counter + "";
+                                        counter++;
+                                        startIndexForRow = k+1;
+                                    }
+                                }
+                            }
+
+
+                            /*
+                             * 
+                             * tmp.BackColor = C_Sq_Avail;  //  Create available square
+                            squareLocations[sqrLine - 1, k] = '0';
+                            if (firstRow)  {
+                                tmp.Text = counter + "";
+                                counter++;
+                                if (counter >= 5) {
+                                    weAreNotDone = true;
+                                }
                             }
                             else  {
                                 if (innerChecker) {
@@ -234,6 +270,7 @@ namespace iaprojectform
                                     innerChecker = false;
                                 }
                             }
+                             */
                         }
 
                         SQUARES[sqrLine-1,k] = tmp;
