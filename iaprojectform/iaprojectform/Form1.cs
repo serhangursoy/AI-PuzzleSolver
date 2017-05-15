@@ -16,7 +16,7 @@ namespace iaprojectform
 {
     public partial class StarterForm : MetroFramework.Forms.MetroForm
     {
-        private bool fromNet = true;
+        private bool fromNet = false;
           
         private String INITIALIZER_FILE = "init.ini";
         private int LEFT_MARGIN = 20, TOP_MARGIN = 20, SIZE = 70, SQUARE_COUNT, GAP = 20;
@@ -49,25 +49,31 @@ namespace iaprojectform
             questionBox2.ForeColor = Color.White;
             questionBox.BackColor = C_Sq_Avail;
             questionBox2.BackColor = C_Sq_Avail;
-
+            /*
             Parser parserObj = new Parser();
             parserObj.GetSynonym("xa213123");
             parserObj.GetDictionary("assort12312312312ment");
 
-            Dictionary<string,int> dic =  parserObj.GetFromGoogle("One of 100 in trump's presidency");
+            Dictionary<string,int> dic =  parserObj.GetFromGoogle("Go down the bunny slope");
 
           //  foreach (KeyValuePair<string, int> a in dic) { Console.WriteLine("Word " + a.Key + " used {0} times", a.Value); }
          
+            */
 
-            
             // We have our puzzle correctly.
             // Lets test
+            /*
             Console.WriteLine("Square Locations:");
             for (int k = 0; k < SQUARE_COUNT; k++) { for (int l = 0; l < SQUARE_COUNT; l++) { Console.Write(squareLocations[k,l] + " "); } Console.WriteLine(); };
             Console.WriteLine("Row questions:");
             foreach (string question in rowQuestions ) { Console.WriteLine(question); };
             Console.WriteLine("Column questions:");
             foreach (string question in columnQuestions) { Console.WriteLine(question); };
+            
+            List<string> tmp = new List<string>();
+            tmp.Add(columnQuestions[3]);
+            for (int k = 0;  k < 5; k++ ) { if (k!=3)tmp.Add(columnQuestions[k]); }            
+            */
 
             Solver solverObj = new Solver();
             ANSWERSFROMAI = solverObj.Solve(squareLocations,rowQuestions,columnQuestions);
